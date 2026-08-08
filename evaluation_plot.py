@@ -3,7 +3,6 @@ import torch.nn as nn
 import matplotlib.pyplot as plt
 import numpy as np
 
-# --- Matching Network Architecture with Distance Prior ---
 class FastGenomicPredictorWithDistance(nn.Module):
     def __init__(self, bins=100):
         super(FastGenomicPredictorWithDistance, self).__init__()
@@ -50,7 +49,6 @@ def evaluate_and_plot():
     val_dict = torch.load("val_data.pt")
     val_x, val_y = val_dict['x'], val_dict['y']
 
-    # Select window index (sample 10 from non-sparse validation set)
     sample_idx = 10
     x_sample = val_x[sample_idx:sample_idx+1]
     y_true = val_y[sample_idx].numpy()
@@ -63,11 +61,9 @@ def evaluate_and_plot():
 
     error_map = np.abs(y_true - y_pred)
 
-    # Calculate Pearson Correlation for this window
     pearson_corr = np.corrcoef(y_true.flatten(), y_pred.flatten())[0, 1]
     print(f"\nUpdated Window Pearson Correlation (r): {pearson_corr:.4f}")
 
-    # Plot Side-by-Side Comparison
     fig, axes = plt.subplots(1, 3, figsize=(15, 4.5))
 
     im0 = axes[0].imshow(y_true, cmap='Reds', origin='lower')
