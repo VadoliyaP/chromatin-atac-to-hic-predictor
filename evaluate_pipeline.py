@@ -15,12 +15,11 @@ def calculate_hicrep_simplified(matrix_true, matrix_pred, max_distance=30):
     N = matrix_true.shape[0]
     strata_corrs = []
     
-    # Stratify by genomic distance (each diagonal step away from the center)
-    for d in range(1, min(max_distance, N)):
+        for d in range(1, min(max_distance, N)):
         diag_true = np.diagonal(matrix_true, offset=d)
         diag_pred = np.diagonal(matrix_pred, offset=d)
         
-        # We need variance to compute correlation
+        
         if np.std(diag_true) > 1e-5 and np.std(diag_pred) > 1e-5:
             corr, _ = pearsonr(diag_true, diag_pred)
             if not np.isnan(corr):
@@ -33,15 +32,15 @@ def evaluate():
     BIGWIG_PATH = "data/ENCFF667MDI.bigWig"
     
     print("[1/3] Loading held-out test data window...")
-    # Use the same 1Mb resolution windowing parameters
+    
     test_dataset = GenomicWindowDataset(
         HIC_PATH, BIGWIG_PATH, chromosomes=['chr1'], 
         window_size=1000000, stride=500000
     )
     
-    # Grab a window downstream (e.g., index 30) that the model never saw during training
+    
     X_test, Y_true = test_dataset[30]
-    X_test = X_test.unsqueeze(0) # Add batch dimension: [1, 1, 100]
+    X_test = X_test.unsqueeze(0) 
     
     print("[2/3] Loading trained model weights...")
     model = DilatedHiCPredictor(num_bins=100)
@@ -50,19 +49,16 @@ def evaluate():
     
     print("[3/3] Generating model predictions...")
     with torch.no_grad():
-        Y_pred = model(X_test).squeeze(0).numpy() # Shape: [100, 100]
+        Y_pred = model(X_test).squeeze(0).numpy() 
         Y_true = Y_true.numpy()
         
-    # Enforce symmetry on the prediction matrix to match biological reality
     Y_pred = (Y_pred + Y_pred.T) / 2
     
-    # Calculate the Stratified Correlation score
     hicrep_score = calculate_hicrep_simplified(Y_true, Y_pred)
     print(f"\n=============================================")
     print(f"Evaluation Simplified HiC-Rep Score: {hicrep_score:.4f}")
     print(f"=============================================")
     
-    # Save a side-by-side visualization to see how well it did
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
     
     im1 = ax1.imshow(Y_true, cmap="YlOrRd", aspect='auto')
