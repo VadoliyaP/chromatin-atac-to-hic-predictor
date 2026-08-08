@@ -16,7 +16,6 @@ chroms = bw.get_chromosomes()
 print("Total Chromosomes in header:", len(chroms))
 print("chr1 length:", bw.get_chrom_size("chr1"))
 
-# Fetch raw signal from chr1 (0 to 10,000 bp)
 signal = bw.read_raw_signal("chr1", 0, 10000)
 print("Successfully read chr1 signal array!")
 print("Sample signal array:", signal)
