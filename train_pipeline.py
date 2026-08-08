@@ -48,14 +48,11 @@ def train_model():
             batch_start = time.time()
             print(f"  -> Processing Batch {i+1}/{len(dataloader)} (Contains {len(batch_x)} windows)...", end="", flush=True)
             
-            # Reset gradients
             optimizer.zero_grad()
             
-            # Forward pass through layers
             predictions = model(batch_x)
             loss = criterion(predictions, batch_y)
             
-            # Backward pass & optimization step
             loss.backward()
             optimizer.step()
             
