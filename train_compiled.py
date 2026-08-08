@@ -8,7 +8,6 @@ class DilatedGenomicPredictor(nn.Module):
         super(DilatedGenomicPredictor, self).__init__()
         self.bins = bins
         
-        # 1D Encoder with Expanding Receptive Fields (Dilation rates: 1, 2, 4, 8)
         self.conv1d_stage = nn.Sequential(
             nn.Conv1d(1, 32, kernel_size=3, padding=1, dilation=1),
             nn.BatchNorm1d(32),
@@ -24,7 +23,6 @@ class DilatedGenomicPredictor(nn.Module):
             nn.ReLU()
         )
         
-        # 2D Decoder with Dilated Spatial Refinement (65 channels = 32_x + 32_y + 1_dist)
         self.conv2d_stage = nn.Sequential(
             nn.Conv2d(65, 32, kernel_size=3, padding=1, dilation=1),
             nn.BatchNorm2d(32),
@@ -38,7 +36,6 @@ class DilatedGenomicPredictor(nn.Module):
             nn.Conv2d(16, 1, kernel_size=3, padding=1)
         )
 
-        # Pre-compute relative distance prior |i - j| / bins
         coords = torch.arange(bins, dtype=torch.float32)
         dist = torch.abs(coords.unsqueeze(0) - coords.unsqueeze(1)) / float(bins)
         self.register_buffer('dist_matrix', dist.unsqueeze(0).unsqueeze(0))
