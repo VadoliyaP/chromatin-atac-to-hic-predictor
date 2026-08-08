@@ -1,0 +1,21 @@
+# Exclude raw datasets from git tracking
+data/
+*.hic
+*.bigWig
+*.cool
+*.mcool
+
+# Exclude virtual environments and caches
+venv/
+__pycache__/
+.ipynb_checkpoints/
+.vscode/
+
+# Exclude PyTorch data/checkpoints and output images
+*.pt
+*.png
+*.jpg
+lnx_venv/
+*.csv
+*.zip
+straw-master/
