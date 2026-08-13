@@ -49,5 +49,5 @@ The repository implements `DilatedGenomicPredictor` (~42,625 parameters), struct
   Concatenate Relative Spatial Distance Matrix Prior |i - j|
        │
   2D Dilated Conv Decoder
-       │
-  Predicted 2D Log(Hi-C) Matrix [Batch, 100, 100]
+  Predited 2D Log(Hi-C) 
+Matrix [Batch, 100, 100]
